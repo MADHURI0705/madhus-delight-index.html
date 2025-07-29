@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Madhu's Delight</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #8B4513 50%,#ffffff 50%);
+      background-repeat: no repeat;
+      background-attachment:fixed;
+      color: #000000;
+    }
+    .welcome, .menu-section {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .hidden {
+      display: none;
+    }
+    .next-button {
+      background-color: white;
+      color: black;
+      border: none;
+      padding: 12px 24px;
+      font-size: 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      border-radius: 5px;
+    }
+    .categories button {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid #ffd700;
+      color: #ffd700;
+      padding: 12px 24px;
+      margin: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      border-radius: 5px;
+    }
+    .menu-items {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .menu-item {
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+      margin: 10px;
+      padding: 20px;
+      border-radius: 10px;
+      width: 340px;
+      text-align: left;
+      color: #000000;
+      font-size: 20px;
+    }
+    .menu-item h3 {
+      color: #000000;
+      font-size: 24px;
+    }
+    .menu-item img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome" id="welcomeScreen">
+    <h1>Welcome to Madhu's Delight</h1>
+    <p>Expect the unexpected on your plate!</p>
+    <button class="next-button" onclick="showMenu()">Next</button>
+  </div>
+
+  <div class="menu-section hidden" id="categoryScreen">
+    <h2>Choose Your Menu</h2>
+    <div class="categories">
+      <button onclick="showItems('nonveg')">🍗 Non-Veg</button>
+      <button onclick="showItems('veg')">🥗 Veg</button>
+      <button onclick="showItems('starters')">🍢 Starters</button>
+      <button onclick="showItems('beverages')">🥤 Beverages</button>
+      <button onclick="showItems('desserts')">🍨 Desserts</button>
+    </div>
+  </div>
+
+  <div class="menu-section hidden" id="menuItems">
+    <h2 id="menuTitle"></h2>
+    <div class="menu-items" id="itemsContainer"></div>
+  </div>
+
+  <script>
+    const categories = ['nonveg', 'veg', 'starters', 'beverages', 'desserts'];
+
+    const imageMap = {
+      'chicken': 'https://www.themealdb.com/images/media/meals/1529444830.jpg',
+      'biryani': 'https://www.indianhealthyrecipes.com/wp-content/uploads/2021/12/chicken-biryani-recipe.jpg',
+      'mutton': 'https://www.cubesnjuliennes.com/wp-content/uploads/2020/06/Mutton-Curry-Recipe.jpg',
+      'fish': 'https://www.archanaskitchen.com/images/archanaskitchen/1-Author/Shaheen_Ali/Fish_Fry.jpg',
+      'egg': 'https://www.indianhealthyrecipes.com/wp-content/uploads/2022/02/egg-curry-recipe.jpg',
+      'prawn': 'https://www.whiskaffair.com/wp-content/uploads/2020/07/Prawn-Masala-2-3.jpg',
+      'paneer': 'https://www.indianhealthyrecipes.com/wp-content/uploads/2022/10/paneer-butter-masala.jpg',
+      'aloo': 'https://www.whiskaffair.com/wp-content/uploads/2018/10/Aloo-Gobi-2-3.jpg',
+      'dal': 'https://www.vegrecipesofindia.com/wp-content/uploads/2021/04/dal-fry-2.jpg',
+      'lassi': 'https://www.cookingclassy.com/wp-content/uploads/2022/04/mango-lassi-05.jpg',
+      'chai': 'https://vegecravings.com/wp-content/uploads/2017/10/Indian-Masala-Chai-Recipe-Step-By-Step-Instructions.jpg',
+      'ice': 'https://www.thespruceeats.com/thmb/GTT5x0el_4FX3ybPZ9QQeGJsfpc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/easy-ice-cream-recipes-4151056-hero-01-d06269d8e258414eb7b760b28f842a07.jpg'
+    };
+
+    const fullMenu = {
+      nonveg: ['Butter Chicken', 'Chicken Biryani', 'Mutton Curry', 'Fish Fry', 'Egg Curry', 'Prawn Masala', 'Chicken Tikka', 'Grilled Chicken', 'Chicken 65', 'Keema Balls', 'Hyderabadi Chicken', 'Chicken Lollipop'],
+      veg: ['Paneer Butter Masala', 'Aloo Gobi', 'Bhindi Fry', 'Mixed Veg Curry', 'Mutter Paneer', 'Chana Masala', 'Veg Kolhapuri', 'Baingan Bharta', 'Dal Tadka', 'Veg Biryani', 'Methi Malai Mutter', 'Malai Kofta'],
+      starters: ['Veg Spring Rolls', 'Paneer Tikka', 'Chicken Pakora', 'Hara Bhara Kabab', 'Samosa', 'Onion Rings', 'Veg Cutlet', 'Cheese Balls', 'Corn Chaat', 'Paneer Pops', 'Chicken Nuggets', 'Stuffed Mushrooms'],
+      beverages: ['Lassi', 'Cold Coffee', 'Masala Chai', 'Fresh Lime Soda', 'Mango Shake', 'Rose Milk', 'Butter Milk', 'Filter Coffee', 'Green Tea', 'Iced Tea', 'Coconut Water', 'Badam Milk'],
+      desserts: ['Gulab Jamun', 'Rasgulla', 'Rasmalai', 'Jalebi', 'Kheer', 'Gajar Halwa', 'Ice Cream', 'Falooda', 'Mysore Pak', 'Ladoo', 'Kulfi', 'Chocolate Brownie']
+    };
+
+    const prices = ['₹120', '₹150', '₹180', '₹200', '₹170', '₹160', '₹140', '₹220', '₹250', '₹190', '₹130', '₹210'];
+
+    const menuData = {};
+    categories.forEach(category => {
+      menuData[category] = fullMenu[category].map((item, i) => {
+        let imgKey = Object.keys(imageMap).find(k => item.toLowerCase().includes(k));
+        return {
+          name: item,
+          price: prices[i % prices.length],
+          image: imageMap[imgKey] || ''
+        };
+      });
+    });
+
+    function showMenu() {
+      document.getElementById('welcomeScreen').classList.add('hidden');
+      document.getElementById('categoryScreen').classList.remove('hidden');
+    }
+
+    function showItems(category) {
+      const items = menuData[category];
+      const container = document.getElementById('itemsContainer');
+      container.innerHTML = '';
+      document.getElementById('menuTitle').textContent = category.toUpperCase() + ' MENU';
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'menu-item';
+        div.innerHTML = `
+          <h3>${item.name}</h3>
+          <p>${item.price}</p>
+          ${item.image ? `<img src="${item.image}" alt="${item.name}" />` : ''}
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById('categoryScreen').classList.add('hidden');
+      document.getElementById('menuItems').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
